@@ -148,14 +148,16 @@ namespace Unibright.Explorer.Transthereum.Services
         private async Task GetTransactionsForAddress(AddressDto enrichedAddress)
         {
             var latestBlockNumber = await web3.Eth.Blocks.GetBlockNumber.SendRequestAsync();
-
+            uint minimumBlockConfirmations = 0;
             var receipts = new List<TransactionReceiptVO>();
 
             var processor = web3.Processing.Blocks.CreateBlockProcessor(steps =>
             {
                 steps.TransactionStep.SetMatchCriteria(t => t.Transaction.IsFrom(enrichedAddress.Address) || t.Transaction.IsTo(enrichedAddress.Address));
-                steps.TransactionReceiptStep.AddSynchronousProcessorHandler(tx => receipts.Add(tx));
-            });
+                steps.TransactionReceiptStep.AddSynchronousProcessorHandler(tx =>
+                receipts.Add(tx)
+                );
+            }, minimumBlockConfirmations);
 
             var toBlock = new BigInteger(latestBlockNumber);
             var fromBlock = latestBlockNumber.Value - 5;
@@ -186,7 +188,7 @@ namespace Unibright.Explorer.Transthereum.Services
                 BlockHeight = (long)t.BlockNumber.Value,
                 From = t.From,
                 To = t.To,
-                Quantity = (long)t.Value.Value,
+                Quantity = t.Value.Value.ToString(),
                 Status = r != null ? r.Status.ToString() : "",
                 TimeStamp = b.Timestamp.ToString(),
                 TransactionHash = t.TransactionHash
@@ -200,7 +202,7 @@ namespace Unibright.Explorer.Transthereum.Services
                 BlockHeight = (long)r.Transaction.BlockNumber.Value,
                 From = r.Transaction.From,
                 To = r.Transaction.To,
-                Quantity = (long)r.Transaction.Value.Value,
+                Quantity = r.Transaction.Value.Value.ToString(),
                 Status = r.Failed ? "0" : "1",
                 TimeStamp = r.Block.Timestamp.ToString(),
                 TransactionHash = r.TransactionHash

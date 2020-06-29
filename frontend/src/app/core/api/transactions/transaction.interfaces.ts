@@ -4,7 +4,7 @@ export interface Transaction {
     transactionHash: string;
     from: string;
     to: string;
-    quantity: number;
+    quantity: string;
     blockHeight: number;
     timeStamp: string;
     status: string;

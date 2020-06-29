@@ -10,7 +10,7 @@ namespace Unibright.Explorer.Transthereum.DTOs
 
         public string To { get; set; }
 
-        public long Quantity { get; set; }
+        public string Quantity { get; set; }
 
         public long BlockHeight { get; set; }
 

@@ -41,7 +41,9 @@ export class AddressDetailsComponent implements OnInit {
 
   patchValue(data: Address): void {
     this.address = data.address;
-
+    data.transactions.forEach(t => {
+      t.quantity = applyDecimals(t.quantity, 18);
+    });
     data.balances.forEach(b => {
       b.amount = applyDecimals(b.amount, b.decimalPlaces);
     });

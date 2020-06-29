@@ -3,6 +3,7 @@ import { Subscription, timer } from 'rxjs';
 import { Transaction } from 'src/app/core/api/transactions/transaction.interfaces';
 import { TransactionService } from 'src/app/core/api/transactions/transaction.service';
 import { switchMap } from 'rxjs/operators';
+import { applyDecimals } from 'src/app/shared/helpers/balance.helper';
 
 @Component({
   selector: 'app-latest-transactions-overview',
@@ -21,6 +22,9 @@ export class LatestTransactionsOverviewComponent implements OnInit, OnDestroy {
     ).subscribe(
       response => {
         this.dataSource = response.sort((a, b) => (a.blockHeight > b.blockHeight) ? -1 : ((b.blockHeight > a.blockHeight) ? 1 : 0));
+        this.dataSource.forEach(t => {
+          t.quantity = applyDecimals(t.quantity, 18);
+        })
       },
       error => console.log('error: ', error)
     );

@@ -13,7 +13,7 @@ export class TransactionDetailsComponent implements OnInit {
   transactionHash: string = null;
   from: string = null;
   to: string = null;
-  quantity: number = null;
+  quantity: string = null;
   blockHeight: number = null;
   timeStamp: string = null;
   status: string = null;
@@ -42,7 +42,7 @@ export class TransactionDetailsComponent implements OnInit {
     this.timeStamp = data.timeStamp;
     this.from = data.from;
     this.to = data.to;
-    this.quantity = data.quantity;
+    this.quantity = applyDecimals(data.quantity,18);
     this.blockHeight = data.blockHeight;
     this.timeStamp = data.timeStamp;
     this.status = data.status;
